@@ -1,0 +1,47 @@
+{% extends '_base.html' %}
+{% load jalali_tags %}
+{% block title %}کامنت های بررسی نشده{% endblock %}
+{% block body %}
+    <div>
+    {% if zipped|length > 0 %}
+    <form action="." method="POST">
+    {% csrf_token %}
+    <div style="overflow-x: scroll">
+        <table class="table table-responsive">
+            <thead>
+            <tr>
+                <th>آیدی کامنت</th>
+                <th>پست</th>
+                <th>نویسنده</th>
+                <th>متن</th>
+                <th>تایید</th>
+                <th>تاریخ نوشتن</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for form, comment in zipped %}
+                <tr style="overflow-y: scroll; max-height: 150px;">
+                    <th>{{ comment.id }}</th>
+                    <td>{{ comment.post.title }}</td>
+                    <td>{{ comment.author.username }}</td>
+                    <td style="min-width: 300px;">{{ comment.text|linebreaks }}</td>
+                    <td><input type="checkbox" class="form-check-input border border-primary border-2" name="form-{{ forloop.counter0 }}-accepted" id="id_form-{{ forloop.counter0 }}-accepted"></td>
+                    <td hidden="hidden">{{ form.id }}</td>
+                    <td>{{ comment.datetime_created|to_jalali:'%d/%m/%Y ساعت %H:%M' }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <p>
+        {{ formset.management_form }}
+    </p>
+        <input type="submit" action="{{ page.next_page }}" class="btn btn-primary" value="بررسی شد">
+    </form>
+    {% else %}
+        <h1>کامنت بررسی نشده ای وجود ندارد</h1>
+    {% endif %}
+    </div>
+{% endblock %}

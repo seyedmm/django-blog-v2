@@ -1,0 +1,107 @@
+{% extends '_base.html' %}
+{% load jalali_tags %}
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+{% block body %}
+    <h1>{{ post.title }}</h1>
+    <p><small>توسط {{ post.author.username }}</small> <small class="text-secondary">
+        {% if post.datetime_modified == post.datetime_created %}نوشته شده در
+            {{ post.datetime_created|to_jalali:'%d %B %Y' }}{% else %}ویرایش شده در
+            {{ post.datetime_modified|to_jalali:'%d %B %Y' }}{% endif %}</small></p>
+
+    <br><br>
+    <p>{{ post.body|safe }}</p>
+    <hr>
+
+    <div>
+        {% if perms.posts.delete_post or user == post.author %}
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                حذف پست
+            </button>
+        {% endif %}
+        {% if perms.posts.update_post or user == post.author %}
+            <a class="btn btn-secondary" href="{% url 'post_update' post.pk %}">
+                ویرایش پست
+            </a>
+        {% endif %}
+    </div>
+
+
+    {% if post.status == 'pub' %}
+        <div class="mt-3">
+        <h5>نظرات:</h5><br>
+        {% if user.is_authenticated and email_verified %}
+            <form method="POST">
+                {% csrf_token %}
+                <div>
+                    <label for="id_text" class="form-label">نظر خود را بنویسید:</label>
+                    <textarea class="form-control" name="text" cols="40" rows="10" maxlength="480" minlength="10"
+                              required="" id="id_text"></textarea>
+                    <small id="char_count">0/480</small>
+                </div>
+                <button type="submit" class="btn btn-outline-secondary">ثبت نظر</button>
+            </form>
+            <script>
+                let textArea = document.getElementById("id_text");
+                let characterCounter = document.getElementById("char_count");
+                const maxNumOfChars = 480;
+                const countCharacters = () => {
+                    let counter = textArea.value.length;
+                    characterCounter.textContent = counter + "/480";
+                    if (counter >= maxNumOfChars) {
+                        characterCounter.classList.add("text-danger");
+                    } else {
+                        characterCounter.classList.remove("text-danger");
+                    }
+                };
+                textArea.addEventListener("input", countCharacters);
+            </script>
+        {% elif user.is_authenticated %}
+            <h6>برای نظردادن، <a href="{% url 'account_email' %}" target="_blank">باید ایمیل خود را تایید کنید</a>.</h6>
+        {% else %}
+            <h6>برای نظر دادن، <a href="{% url 'account_login' %}">وارد شوید</a></h6>
+        {% endif %}
+        {% if comments|length > 0 %}
+
+
+            {% for comment in comments %}
+                <hr>
+                <div>
+                    <small>{{ comment.author.username }} در {{ comment.datetime_created|to_jalali:'%d %B %Y' }}
+                        نوشت:</small>
+                    <p>
+                        {{ comment.text|linebreaks }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
+        {% endif %}
+    {% endif %}
+
+</div>
+    {% if perms.posts.delete_post or user == post.author %}
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">حذف پست</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        آیا مطمئنید که میخواهید پست {{ post.title }} را حذف کنید؟
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">خیر</button>
+                        <form action="{% url 'post_delete' post.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">بله</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

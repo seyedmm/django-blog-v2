@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+{% block title %}خانه{% endblock %}
+{% block body %}
+
+    {% if is_search %}برای "{{ search_query }}" سرچ کردی{% endif %}
+    {% if posts %}
+        {% for post in posts %}
+            <div>
+                <div>
+                    <a href="{% url 'post_detail' post.pk %}"><h3>{{ post.title }}</h3></a>
+                </div>
+                <p>
+                    {{ post.description }}
+                </p>
+            </div>
+            {% if forloop.counter < posts|length %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h1>پستی پیدا نشد</h1>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{
+  "platform": "django",
+  "app": "django-seyedmm-blog",
+  "django": {
+    "pythonVersion": "3.11"
+  },
+  "disks": [
+    {
+      "name": "media",
+      "mountTo": "media"
+    },
+    {
+      "name": "static-files",
+      "mountTo": "staticfiles"
+    },
+    {
+      "name": "static-dir",
+      "mountTo": "static"
+    }
+  ]
+}

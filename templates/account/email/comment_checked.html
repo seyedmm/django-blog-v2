@@ -1,0 +1,6 @@
+{% extends 'account/email/base_email.html' %}
+{% block content %}
+<h1>نظر شما بررسی شد</h1>
+<p>نظر شما زیر پست "<a href="{{ site_url }}{{ comment.post.get_absolute_url }}">{{ comment.post.title }}</a>" با متن "{{ comment.text }}" را بررسی کردیم و {% if comment.accepted %}نظر شما تایید شد{% else %}متاسفانه نظرشما برای نمایش در وبسایت ردشد{% endif %}.</p>
+<p>باتشکر از شما برای استفاده از <a href="{{ site_url }}">{{ site_name }}</a>.</p>
+{% endblock %}

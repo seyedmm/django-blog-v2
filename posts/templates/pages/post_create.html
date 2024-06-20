@@ -1,0 +1,73 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}
+    {% if is_update %}
+        ویرایش پست
+    {% else %}
+        ایجاد پست
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+        <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+        <p>
+            <label for="id_title" class="form-label">عنوان:</label>
+            <input type="text" class="form-control" name="title" maxlength="90" required="" id="id_title"{% if is_update %} value="{{ form.title.value }}"{% endif %}>
+            <small id="char_count_title">0/90</small>
+            <script>
+                let titleInput = document.getElementById("id_title");
+                let characterCounterTitle = document.getElementById("char_count_title");
+                const maxNumOfCharsTitle = 90;
+                const countCharactersTitle = () => {
+                    let counterTitle = titleInput.value.length;
+                    characterCounterTitle.textContent = counterTitle + "/" + maxNumOfCharsTitle;
+                    if (counterTitle >= maxNumOfCharsTitle) {
+                        characterCounterTitle.classList.add("text-danger");
+                    } else {
+                        characterCounterTitle.classList.remove("text-danger");
+                    }
+                };
+                titleInput.addEventListener("input", countCharactersTitle);
+            </script>
+        </p>
+        <p>
+            <label for="id_description" class="form-label">توضیحات:</label>
+            <textarea name="description" class="form-control" cols="40" rows="10" maxlength="600" required=""
+                      id="id_description">{% if is_update %}{{ form.description.value }}{% endif %}</textarea>
+            <small id="char_count_description">0/600</small>
+            <script>
+                let textArea = document.getElementById("id_description");
+                let characterCounterDescription = document.getElementById("char_count_description");
+                const maxNumOfCharsDescription = 600;
+                const countCharactersDescription = () => {
+                    let counter = textArea.value.length;
+                    characterCounterDescription.textContent = counter + "/" + maxNumOfCharsDescription;
+                    if (counter >= maxNumOfCharsDescription) {
+                        characterCounterDescription.classList.add("text-danger");
+                    } else {
+                        characterCounterDescription.classList.remove("text-danger");
+                    }
+                };
+                textArea.addEventListener("input", countCharactersDescription);
+            </script>
+        </p>
+        <p><label for="id_body" class="form-label">بدنه پست:</label></p>
+        {{ form.body }}
+        <p>
+            <label for="id_status">حالت انتشار:</label>
+            <select name="status" class="form-select border border-3" required="" id="id_status">
+                {% if form.status.value == 'pub' %}
+                    <option value="pub">عمومی</option>
+                    <option value="drf">پیش نویس</option>
+                {% else %}
+                    <option value="drf">پیش نویس</option>
+                    <option value="pub">عمومی</option>
+                {% endif %}
+            </select>
+        </p>
+        <button type="submit" class="btn btn-success">ارسال</button>
+    </form>
+
+{% endblock %}

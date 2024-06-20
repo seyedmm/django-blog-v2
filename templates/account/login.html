@@ -1,0 +1,91 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}ورود{% endblock %}
+{% block custom_header %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block body %}
+{#    <div class="d-flex justify-content-center mt-3" dir="rtl">#}
+{#        <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-xs-6 bg-white m-3 m-sm-5 border rounded px-4 pt-4 pb-3 shadow">#}
+            <form method="post">
+                {% csrf_token %}
+                <h1 class="text-center">ورود</h1>
+                {% if form.non_field_errors or form.errors %}
+                    <ul class="list-group mt-2 mb-2">
+                        {% for error in form.errors.items %}
+                            <li class="list-group-item list-group-item-danger">
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+
+                <div class="form-group">
+                    <label for="id_login" class="m-2">نام کاربری یا ایمیل:</label>
+                    <input class="form-control" type="text" name="login" placeholder="" autocomplete="username"
+                           maxlength="150" required="" id="id_login"
+                           {% if form.is_bound %}value={{ form.login.value }} {% endif %}>
+                </div>
+                {% if form.login.errors %}
+                    <ul class="list-group mt-2 mb-2">
+                        {% for error in form.login.errors %}
+                            <li class="list-group-item list-group-item-danger">
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                {% endif %}
+
+
+                <div class="form-group">
+                    <label for="id_password" class="m-2">رمز عبور:</label>
+                    <input class="form-control" type="password" name="password" placeholder=""
+                           autocomplete="current-password" required="" id="id_password"
+                           {% if form.is_bound %}value={{ form.password.value }} {% endif %}>
+                </div>
+                {% if form.password.errors %}
+                    <ul class="list-group mt-2 mb-2">
+                        {% for error in form.password.errors %}
+                            <li class="list-group-item list-group-item-danger">
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                {% endif %}
+
+
+
+
+                    <div class="mt-2">
+                        <a class="text-decoration-none" href="{% url 'account_reset_password' %}">رمز عبور خود را
+                            فراموش کرده اید؟</a>
+                    </div>
+                <button type="submit" class="btn btn-success mt-3 w-100">ورود</button>
+            </form>
+            <div class="line-with-middle-sep">
+                  <span>
+                    یا
+                  </span>
+            </div>
+            <a href="{% url 'account_signup' %}" class="btn btn-primary mt-2 mb-3 w-100">
+                ثبت نام با ایمیل
+            </a>
+            <form action="{% provider_login_url 'google' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-dark mt-2 mb-3 w-100">
+                    ورود یا ثبت نام با گوگل
+                </button>
+            </form>
+            {#                <a href="{% provider_login_url 'google' %}" class="btn btn-dark mt-2 mb-3 w-100">#}
+            {#                    <i class="fa-brands fa-google"></i>#}
+            {#                    ورود یا ثبت نام با گوگل#}
+            {#                </a>#}
+
+{#        </div>#}
+{#    </div>#}
+
+{% endblock %}

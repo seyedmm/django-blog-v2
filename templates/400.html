@@ -1,0 +1,9 @@
+{% extends '_base.html' %}
+{% block title %}
+    صفحه یافت نشد
+{% endblock %}
+{% block body %}
+    <h1>خطای 400، یه مشکلی توی درخواست شماست</h1>
+    <p>شاید با خونه رفتن حل بشه</p>
+    <p><a href="{% url 'home' %}" class="btn btn-success">بریم خونه</a></p>
+{% endblock %}

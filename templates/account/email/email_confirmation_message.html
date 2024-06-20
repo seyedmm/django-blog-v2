@@ -1,0 +1,7 @@
+{% extends 'account/email/base_email.html' %}
+{% block content %}
+    <h1>تایید ایمیل</h1>
+    <p>شما این ایمیل را دریافت کرده اید زیرا کاربر {{ user }} آدرس ایمیل شما را برای ثبت نام در {{ current_site.domain }} ارائه کرده است.</p>
+    <p>برای تایید، به آدرس  زیر بروید:</p>
+    <a href="{{ activate_url }}">{{ activate_url }}</a>
+{% endblock content %}

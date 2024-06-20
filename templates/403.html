@@ -1,0 +1,9 @@
+{% extends '_base.html' %}
+{% block title %}
+صفحه یافت نشد
+{% endblock %}
+{% block body %}
+<h1>خطای 403، اجازه دسترسی به این صفحه رو نداری</h1>
+    <p>متاسفانه باید برگردی خونه</p>
+    <p><a href="{% url 'home' %}" class="btn btn-success">بریم خونه</a></p>
+{% endblock %}

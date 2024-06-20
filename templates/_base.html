@@ -1,0 +1,172 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"#}
+    {#          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">#}
+
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link type="text/css" href="{% static 'Bootstrap/css/bootstrap.rtl.min.css' %}" rel="stylesheet"/>
+    {% block custom_header %}
+
+    {% endblock %}
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <title>مهدی | {% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg text-light" style="background-color: #2ca36c;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a class="nav-link text-light">خوش اومدی {{ user.username }}</a>
+                    {% else %}
+                        <a class="nav-link text-light" href="{% url 'account_login' %}">ورود به وبسایت</a>
+                    {% endif %}
+                    {#                    <a class="nav-link text-light" href="#"></a>#}
+
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active text-light" style="cursor: pointer;" aria-current="page"
+                           data-bs-toggle="modal" data-bs-target="#logoutModal">خروج</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link active text-light" aria-current="page" href="{% url 'home' %}">خونه</a>
+                </li>
+            </ul>
+            <form class="d-flex" method="POST" action="{% url 'search' %}" role="search">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" name="search-query" placeholder="گشتن تو کل وبلاگ"
+                       aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">بگرد</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid bg-success">
+    <div class="row py-3">
+        <div class="col-md-8 col-md-10 mx-auto">
+            <h3 class="my-4 mt-3 text-white">مهدی</h3>
+            <p class="text-light">بعضی وقتا از اوضاع و احوالم مینویسم، شایدم بیشتر.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="logoutModalLabel">خروج از حساب کاربری</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئنی که میخوای خارج بشی؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">نه</button>
+                <form method="post" action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger">آره</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-4">
+    <div class="row">
+    <div class="col-md-3">
+            <div class="card my-4">
+                <h5 class="card-header">به وبلاگ من خوش اومدید</h5>
+                <div class="card-body">
+                    <p class="card-text">من سیدمهدی موسویانم. توسعه دهنده تازه کار جنگو و پایتون. پایتونو دوست دارم و
+                        بعضی وقتا اینجا از پایتون مینویسم.</p>
+                    <a href="https://redl.ink/seyedmm/" target="_blank" class="btn btn-danger">ارتباط با من</a>
+                    <p class="mt-2">
+                        {% if user.is_staff %}
+                                <a href="/admin" class="btn btn-secondary mt-1 w-100">پنل مدیریت جنگو</a>
+                        {% endif %}
+                        {% if perms.posts.add_post %}
+                            <a href="{% url 'new_post' %}" class="btn btn-secondary mt-1 w-100">پست جدید</a>
+                        {% endif %}
+                        {% if perms.comments.accept_comment %}
+                            <a href="{% url 'not_accepted_comments_no_arg' %}" class="btn btn-secondary mt-1 w-100">کامنت های بررسی نشده</a>
+                        {% endif %}
+                    {% if perms.posts.can_view_draft_post %}
+                        <a href="{% url 'draft_post_list' %}" class="btn btn-secondary mt-1 w-100">پست های منتشر نشده</a>
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible fade show my-2" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            <div class="card shadow my-3 p-5">
+                {% block body %}
+
+                {% endblock %}
+                {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                                <a class="page-link"
+                                   {% if page_obj.has_previous %}href="?page={{ page_obj.previous_page_number }}"{% endif %}>&laquo;</a>
+                            </li>
+                            {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active">
+                                <span class="page-link" aria-current="page">{{ page_obj.number }}</span>
+                            </li>
+                            {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                                <a class="page-link"
+                                   {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}"{% endif %}>&raquo;</a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Bootstrap -->
+<script type="text/javascript" src="{% static 'Bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
